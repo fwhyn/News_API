@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Noos" parent="Theme.AppCompat.DayNight.NoActionBar" />
+    <style name="Theme.Noos" parent="Theme.AppCompat.DayNight.DarkActionBar" />
+
+    <style name="MyAppBarLayoutTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlHighlight">@color/gray_light</item>
+    </style>
 </resources>
