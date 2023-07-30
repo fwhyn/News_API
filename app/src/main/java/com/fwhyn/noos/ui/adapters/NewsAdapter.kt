@@ -11,9 +11,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.databinding.ItemNewsBinding
-import com.fwhyn.noos.ui.helper.Utils
 
 
 class NewsAdapter(
@@ -68,12 +68,12 @@ class NewsAdapter(
             source.text = article.source?.name
             author.text = article.author
             title.text = article.title
-            publishedAt.text = Utils.DateFormat(article.publishedAt)
+            publishedAt.text = Utils.getNewFormat(article.publishedAt)
             time.text = ""
 
             val options = RequestOptions()
-                .placeholder(Utils.randomDrawbleColor)
-                .error(Utils.randomDrawbleColor)
+                .placeholder(Utils.randomDrawableColor)
+                .error(Utils.randomDrawableColor)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(100, 100)
                 .centerCrop()

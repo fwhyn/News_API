@@ -10,7 +10,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-class RetrofitClient {
+class NewsClient {
     companion object {
         private const val BASE_URL = "https://newsapi.org/v2/"
         const val API_KEY = "32faed07c15f49d3862da0a8d9940430"

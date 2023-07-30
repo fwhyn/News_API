@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fwhyn.noos.R
-import com.fwhyn.noos.data.api.RetrofitClient
+import com.fwhyn.noos.data.api.NewsClient
+import com.fwhyn.noos.data.api.NewsInterface
+import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.News
-import com.fwhyn.noos.data.remote.NewsRemoteDataSource
 import com.fwhyn.noos.ui.adapters.NewsAdapter
-import com.fwhyn.noos.ui.helper.Utils
 import com.fwhyn.noos.ui.news.NewsDetailActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     fun LoadJson(keyword: String) {
         errorLayout!!.visibility = View.GONE
         swipeRefreshLayout!!.isRefreshing = true
-        val apiInterface = RetrofitClient().retrofit.create(
-            NewsRemoteDataSource::class.java
+        val apiInterface = NewsClient().retrofit.create(
+            NewsInterface::class.java
         )
         val country = Utils.country
         val language = Utils.language
