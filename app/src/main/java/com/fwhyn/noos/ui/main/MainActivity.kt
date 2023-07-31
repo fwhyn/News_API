@@ -1,5 +1,6 @@
 package com.fwhyn.noos.ui.main
 
+import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
@@ -46,26 +47,16 @@ class MainActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefreshLay
 
     // ----------------------------------------------------------------
     private fun init() {
-        initView()
-        initData()
-        onItemClick()
         initObserver()
-    }
-
-    private fun initData() {
-
-    }
-
-    private fun onItemClick() {
-
+        initView()
     }
 
     private fun initObserver() {
         viewModel.articles.observe(this) {
             when (it) {
-                is CustomResult.Failure -> doFailureTask(it)
-                CustomResult.Loading -> doLoadingTask()
-                is CustomResult.Success -> doSuccessTask(it)
+                is CustomResult.Failure -> onFailure(it)
+                CustomResult.Loading -> onLoading()
+                is CustomResult.Success -> onSuccess(it)
             }
         }
     }
@@ -117,7 +108,7 @@ class MainActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefreshLay
         }
     }
 
-    private fun doFailureTask(value: CustomResult.Failure) {
+    private fun onFailure(value: CustomResult.Failure) {
         swipeRefresh.isRefreshing = false
 
         setViewError(value.errorMessage)
@@ -131,22 +122,23 @@ class MainActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefreshLay
         }
     }
 
-    private fun doLoadingTask() {
+    private fun onLoading() {
         swipeRefresh.isRefreshing = true
         errorView.layoutError.visibility = View.GONE
     }
 
-    private fun doSuccessTask(data: CustomResult.Success<List<Article>>) {
+    private fun onSuccess(data: CustomResult.Success<List<Article>>) {
         swipeRefresh.isRefreshing = false
         errorView.layoutError.visibility = View.GONE
 
         showNewsList(data.value)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showNewsList(data: List<Article>) {
         articles.clear()
         articles.addAll(data)
-        newsAdapter.notifyItemChanged(0)
+        newsAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

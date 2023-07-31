@@ -20,6 +20,10 @@ class MainViewModel @Inject constructor(private val newsDataRepository: NewsData
     private val _articles = MutableLiveData<CustomResult<List<Article>>>()
     val articles: LiveData<CustomResult<List<Article>>> = _articles
 
+    init {
+        loadNews(temporaryKeyword)
+    }
+
     fun loadNews(keyword: String) {
         _articles.value = CustomResult.Loading
 
