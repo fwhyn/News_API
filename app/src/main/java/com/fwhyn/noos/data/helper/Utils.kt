@@ -38,7 +38,7 @@ object Utils {
     //        return isTime;
     //    }
 
-    fun getNewFormat(oldDate: String): String {
+    fun getNewDateFormat(oldDate: String): String {
         return try {
             val oldDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale(country))
             val parsedOldDate = oldDateFormat.parse(oldDate)

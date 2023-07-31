@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.fwhyn.noos.R
 import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
+import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.databinding.ActivityNewsDetailBinding
 import com.fwhyn.noos.databinding.ToolbarCustomBinding
@@ -100,12 +101,20 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
 
     private fun initObserver() {
         viewModel.article.observe(this) {
-            it.url?.let { url -> webView.loadUrl(url) }
 //            toolbar.tvAppbarTitle.text = it.source?.name
 //            toolbar.tvAppbarSubtitle.text = it.url
 
             supportActionBar?.title = it.source?.name
             supportActionBar?.subtitle = it.url
+
+            it.url?.let { url -> webView.loadUrl(url) }
+
+            viewBinding.run {
+                tvTitle.text = it.title
+                tvAuthor.text = it.author
+                tvPublishedAt.text = it.publishedAt?.let { date -> Utils.getNewDateFormat(date) }
+                tvTime.text = ""
+            }
         }
     }
 

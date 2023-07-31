@@ -68,7 +68,7 @@ class NewsAdapter(
             source.text = article.source?.name
             author.text = article.author
             title.text = article.title
-            publishedAt.text = article.publishedAt?.let { Utils.getNewFormat(it) }
+            publishedAt.text = article.publishedAt?.let { Utils.getNewDateFormat(it) }
             time.text = ""
 
             val options = RequestOptions()
