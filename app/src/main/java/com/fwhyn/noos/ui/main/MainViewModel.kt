@@ -8,26 +8,32 @@ import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.NewsParameter
 import com.fwhyn.noos.data.repository.NewsDataRepository
+import com.fwhyn.noos.ui.helper.CustomResult
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(private val newsDataRepository: NewsDataRepository) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val newsDataRepository: NewsDataRepository) : ViewModel() {
 
-    private val _articles = MutableLiveData<List<Article>>()
-    val articles: LiveData<List<Article>> = _articles
+    var temporaryKeyword: String = ""
+
+    private val _articles = MutableLiveData<CustomResult<List<Article>>>()
+    val articles: LiveData<CustomResult<List<Article>>> = _articles
 
     fun loadNews(keyword: String) {
+        _articles.value = CustomResult.Loading
 
         newsDataRepository.getNews(NewsParameter(keyword))
             .addOnSuccessListener(object : OnSuccessListener<List<Article>> {
                 override fun onSuccess(data: List<Article>) {
-                    _articles.value = data
+                    _articles.value = CustomResult.Success(data)
                 }
 
             })
             .addOnFailureListener(object : OnFailureListener<String> {
                 override fun onFailure(error: String) {
-
+                    _articles.value = CustomResult.Failure(error)
                 }
-
             })
     }
 }

@@ -8,14 +8,12 @@ import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.News
 import com.fwhyn.noos.data.models.NewsParameter
-import com.fwhyn.noos.ui.main.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class NewsRemoteDataSource(
-    retrofitClient: NewsClient,
-) {
+class NewsRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
 
     private val service = retrofitClient.retrofit.create(NewsInterface::class.java)
     private val country = Utils.country
@@ -28,9 +26,9 @@ class NewsRemoteDataSource(
         val keyword = newParameter.keyword
 
         val call: Call<News> = if (!keyword.isNullOrEmpty()) {
-            service.getNewsSearch(keyword, language, "publishedAt", MainActivity.API_KEY)
+            service.getNewsSearch(keyword, language, "publishedAt")
         } else {
-            service.getNews(country, MainActivity.API_KEY)
+            service.getNews(country)
         }
 
         call.enqueue(object : Callback<News> {

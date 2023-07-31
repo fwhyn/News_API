@@ -5,12 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,122 +14,139 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fwhyn.noos.R
-import com.fwhyn.noos.data.api.NewsClient
-import com.fwhyn.noos.data.api.NewsInterface
-import com.fwhyn.noos.data.helper.Utils
+import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
 import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.data.models.News
+import com.fwhyn.noos.databinding.ActivityMainBinding
+import com.fwhyn.noos.databinding.ViewErrorBinding
 import com.fwhyn.noos.ui.adapters.NewsAdapter
+import com.fwhyn.noos.ui.helper.CustomResult
 import com.fwhyn.noos.ui.news.NewsDetailActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
+class MainActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefreshLayout.OnRefreshListener {
 
-class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
-    private var recyclerView: RecyclerView? = null
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var articles: ArrayList<Article>? = ArrayList()
-    private var adapter: NewsAdapter? = null
-    private val TAG = MainActivity::class.java.simpleName
-    private var topHeadline: TextView? = null
-    private var swipeRefreshLayout: SwipeRefreshLayout? = null
-    private var errorLayout: RelativeLayout? = null
-    private var errorImage: ImageView? = null
-    private var errorTitle: TextView? = null
-    private var errorMessage: TextView? = null
-    private var btnRetry: Button? = null
+    private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var errorView: ViewErrorBinding
+
+    private lateinit var articlesView: RecyclerView
+    private lateinit var newsAdapter: NewsAdapter
+    private val articles = ArrayList<Article>()
+
+    private val viewModel: MainViewModel by viewModels()
+    override fun onBinding(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
-        swipeRefreshLayout!!.setOnRefreshListener(this)
-        swipeRefreshLayout!!.setColorSchemeResources(R.color.black)
-        topHeadline = findViewById(R.id.tv_source_title)
-        recyclerView = findViewById(R.id.recycler_view_news)
-        layoutManager = LinearLayoutManager(this@MainActivity)
-        recyclerView!!.layoutManager = layoutManager
-        recyclerView!!.itemAnimator = DefaultItemAnimator()
-        recyclerView!!.isNestedScrollingEnabled = false
-        onLoadingSwipeRefresh("")
-        errorLayout = findViewById(R.id.errorLayout)
-        errorImage = findViewById(R.id.errorImage)
-        errorTitle = findViewById(R.id.errorTitle)
-        errorMessage = findViewById(R.id.errorMessage)
-        btnRetry = findViewById(R.id.btnRetry)
+
+        init()
     }
 
-    fun LoadJson(keyword: String) {
-        errorLayout!!.visibility = View.GONE
-        swipeRefreshLayout!!.isRefreshing = true
-        val apiInterface = NewsClient().retrofit.create(
-            NewsInterface::class.java
-        )
-        val country = Utils.country
-        val language = Utils.language
-        val call: Call<News?>? = if (keyword.length > 0) {
-            apiInterface.getNewsSearch(keyword, language, "publishedAt", API_KEY)
-        } else {
-            apiInterface.getNews(country, API_KEY)
+    // ----------------------------------------------------------------
+    private fun init() {
+        initView()
+        initData()
+        onItemClick()
+        initObserver()
+    }
+
+    private fun initData() {
+
+    }
+
+    private fun onItemClick() {
+
+    }
+
+    private fun initObserver() {
+        viewModel.articles.observe(this) {
+            when (it) {
+                is CustomResult.Failure -> doFailureTask(it)
+                CustomResult.Loading -> doLoadingTask()
+                is CustomResult.Success -> doSuccessTask(it)
+            }
         }
-        call!!.enqueue(object : Callback<News?> {
-            override fun onResponse(call: Call<News?>, response: Response<News?>) {
-                if (response.isSuccessful && response.body()!!.article != null) {
-                    if (articles!!.isNotEmpty()) {
-                        articles!!.clear()
-                    }
-                    articles = response.body()!!.article?.let { ArrayList(it) }
-                    adapter = NewsAdapter(this@MainActivity, articles!!.toList()) { article ->
-                        initListener(article)
-                    }
-
-                    recyclerView!!.addItemDecoration(
-                        DividerItemDecoration(
-                            this@MainActivity,
-                            DividerItemDecoration.VERTICAL
-                        )
-                    )
-                    recyclerView!!.adapter = adapter
-                    adapter!!.notifyDataSetChanged()
-                    topHeadline!!.visibility = View.VISIBLE
-                    swipeRefreshLayout!!.isRefreshing = false
-                } else {
-                    topHeadline!!.visibility = View.INVISIBLE
-                    swipeRefreshLayout!!.isRefreshing = false
-                    val errorCode: String
-                    errorCode = when (response.code()) {
-                        404 -> "404 not found"
-                        500 -> "500 server broken"
-                        else -> "unknown error"
-                    }
-                    showErrorMessage(
-                        "No Result",
-                        """
-                            Please Try Again!
-                            $errorCode
-                            """.trimIndent()
-                    )
-                }
-            }
-
-            override fun onFailure(call: Call<News?>, t: Throwable) {
-                topHeadline!!.visibility = View.INVISIBLE
-                swipeRefreshLayout!!.isRefreshing = false
-                showErrorMessage(
-                    "Oops..",
-                    """
-                        Network failure, Please Try Again
-                        $t
-                        """.trimIndent()
-                )
-            }
-        })
     }
 
-    private fun initListener(article: Article) {
+    private fun initView() {
+        initSwipeRefresh()
+        initArticlesView()
+        initErrorView()
+    }
+
+    private fun initSwipeRefresh() {
+        swipeRefresh = viewBinding.layoutSwipeRefresh
+
+        swipeRefresh.run {
+            setOnRefreshListener(this@MainActivity)
+            setColorSchemeResources(R.color.gray)
+        }
+    }
+
+    private fun initArticlesView() {
+        articlesView = viewBinding.recyclerViewNews
+        newsAdapter = NewsAdapter(this@MainActivity, articles) { article ->
+            onItemClick(article)
+        }
+
+        articlesView.run {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            itemAnimator = DefaultItemAnimator()
+            isNestedScrollingEnabled = false
+            addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+            adapter = newsAdapter
+        }
+    }
+
+    private fun onItemClick(article: Article) {
         val intent = Intent(this@MainActivity, NewsDetailActivity::class.java)
         intent.putExtra("ARTICLE", article)
         startActivity(intent)
+    }
+
+    private fun initErrorView() {
+        errorView = viewBinding.viewError
+
+        errorView.run {
+            layoutError.visibility = View.GONE
+            btnRetry.setOnClickListener {
+                viewModel.loadNews(viewModel.temporaryKeyword)
+            }
+        }
+    }
+
+    private fun doFailureTask(value: CustomResult.Failure) {
+        swipeRefresh.isRefreshing = false
+
+        setViewError(value.errorMessage)
+    }
+
+    private fun setViewError(data: String) {
+        errorView.run {
+            layoutError.visibility = View.VISIBLE
+            tvErrorTitle.text = getString(R.string.no_result)
+            tvErrorMessage.text = data
+        }
+    }
+
+    private fun doLoadingTask() {
+        swipeRefresh.isRefreshing = true
+        errorView.layoutError.visibility = View.GONE
+    }
+
+    private fun doSuccessTask(data: CustomResult.Success<List<Article>>) {
+        swipeRefresh.isRefreshing = false
+        errorView.layoutError.visibility = View.GONE
+
+        showNewsList(data.value)
+    }
+
+    private fun showNewsList(data: List<Article>) {
+        articles.clear()
+        articles.addAll(data)
+        newsAdapter.notifyItemChanged(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -147,14 +160,18 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.length > 2) {
-                    onLoadingSwipeRefresh(query)
+                    viewModel.temporaryKeyword = query
+                    viewModel.loadNews(viewModel.temporaryKeyword)
                 } else {
                     Toast.makeText(this@MainActivity, "Type more than two letters!", Toast.LENGTH_SHORT).show()
                 }
+
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.temporaryKeyword = newText
+
                 return false
             }
         })
@@ -163,25 +180,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        LoadJson("")
-    }
-
-    private fun onLoadingSwipeRefresh(keyword: String) {
-        swipeRefreshLayout!!.post { LoadJson(keyword) }
-    }
-
-    private fun showErrorMessage(title: String, message: String) {
-        if (errorLayout!!.visibility == View.GONE) {
-            errorLayout!!.visibility = View.VISIBLE
-        }
-
-//        errorImage.setImageResource(imageView);
-        errorTitle!!.text = title
-        errorMessage!!.text = message
-        btnRetry!!.setOnClickListener { onLoadingSwipeRefresh("") }
-    }
-
-    companion object {
-        const val API_KEY = "32faed07c15f49d3862da0a8d9940430"
+        viewModel.temporaryKeyword = ""
+        viewModel.loadNews(viewModel.temporaryKeyword)
     }
 }

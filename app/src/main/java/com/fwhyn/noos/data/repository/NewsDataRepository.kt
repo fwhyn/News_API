@@ -5,10 +5,9 @@ import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.NewsParameter
 import com.fwhyn.noos.data.remote.NewsRemoteDataSource
+import javax.inject.Inject
 
-class NewsDataRepository(
-    private val newsRemoteDataSource: NewsRemoteDataSource
-) {
+class NewsDataRepository @Inject constructor(private val newsRemoteDataSource: NewsRemoteDataSource) {
     fun getNews(newsParameter: NewsParameter): NewsDataRepository {
         newsRemoteDataSource.getNews(newsParameter)
 

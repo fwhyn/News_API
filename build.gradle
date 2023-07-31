@@ -2,8 +2,8 @@
 
 buildscript {
     ext {
-        ext.kotlin_version = '1.7.20'
-        ext.dagger_version = '2.44.2'
+        ext.kotlin_version = '1.8.20'
+        ext.dagger_version = '2.45'
     }
 
     repositories {
@@ -15,7 +15,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.0'
+        classpath 'com.android.tools.build:gradle:8.0.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -24,6 +24,7 @@ buildscript {
 
 plugins {
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
+    id 'com.google.dagger.hilt.android' version "$dagger_version" apply false
 }
 
 allprojects {

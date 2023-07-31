@@ -77,7 +77,7 @@ class NewsDetailActivity : AppCompatActivity(), OnOffsetChangedListener {
             .into(imageView!!)
         appbar_title!!.setText(mSource)
         appbar_subtitle!!.setText(mUrl)
-        date!!.setText(Utils.getNewFormat(mDate))
+        date!!.setText(Utils.getNewFormat(mDate!!))
         title!!.setText(mTitle)
         val author: String
         author = if (mAuthor != null) {
