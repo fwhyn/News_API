@@ -5,13 +5,12 @@
     <item
         android:id="@+id/share"
         android:icon="@drawable/ic_share"
-        android:title="Share"
-        app:showAsAction="always" />
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/view_web"
-        android:title="Open with browser"
+        android:title="@string/open_with_browser"
         app:showAsAction="never" />
-
 
 </menu>

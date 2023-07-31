@@ -12,4 +12,7 @@
     <string name="error_message">Error Message</string>
     <string name="retry">Retry</string>
     <string name="no_result">No Result</string>
+    <string name="share">Share</string>
+    <string name="open_with_browser">Open with browser</string>
+    <string name="link">Link</string>
 </resources>

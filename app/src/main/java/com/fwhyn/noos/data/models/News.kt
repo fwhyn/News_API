@@ -2,6 +2,7 @@ package com.fwhyn.noos.data.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class News(
     @SerializedName("status")
@@ -15,4 +16,4 @@ data class News(
     @SerializedName("articles")
     @Expose
     var article: List<Article>? = null
-)
+) : Serializable

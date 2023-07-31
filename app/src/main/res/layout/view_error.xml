@@ -4,8 +4,7 @@
     android:id="@+id/layout_error"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_light"
-    android:visibility="gone">
+    android:background="@color/gray_light">
 
     <ImageView
         android:id="@+id/img_error"

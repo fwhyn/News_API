@@ -3,7 +3,8 @@
 
     <style name="Theme.Noos" parent="Theme.AppCompat.DayNight.DarkActionBar" />
 
-    <style name="MyAppBarLayoutTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlHighlight">@color/gray_light</item>
+    <style name="AppBarTheme" parent="Theme.Noos">
+
     </style>
+
 </resources>
