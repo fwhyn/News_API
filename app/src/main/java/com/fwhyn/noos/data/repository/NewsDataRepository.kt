@@ -3,13 +3,13 @@ package com.fwhyn.noos.data.repository
 import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.data.models.NewsParameter
+import com.fwhyn.noos.data.models.NewsRequestParameter
 import com.fwhyn.noos.data.remote.NewsRemoteDataSource
 import javax.inject.Inject
 
 class NewsDataRepository @Inject constructor(private val newsRemoteDataSource: NewsRemoteDataSource) {
-    fun getNews(newsParameter: NewsParameter): NewsDataRepository {
-        newsRemoteDataSource.getNews(newsParameter)
+    fun getNews(newsRequestParameter: NewsRequestParameter): NewsDataRepository {
+        newsRemoteDataSource.getNews(newsRequestParameter)
 
         return this
     }

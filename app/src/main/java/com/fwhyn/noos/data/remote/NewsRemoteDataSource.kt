@@ -6,8 +6,8 @@ import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.data.models.News
-import com.fwhyn.noos.data.models.NewsParameter
+import com.fwhyn.noos.data.models.NewsApiResponse
+import com.fwhyn.noos.data.models.NewsRequestParameter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,18 +22,18 @@ class NewsRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
     var onSuccessListener: OnSuccessListener<List<Article>>? = null
     var onFailureListener: OnFailureListener<String>? = null
 
-    fun getNews(newParameter: NewsParameter): NewsRemoteDataSource {
+    fun getNews(newParameter: NewsRequestParameter): NewsRemoteDataSource {
         val keyword = newParameter.keyword
 
-        val call: Call<News> = if (!keyword.isNullOrEmpty()) {
+        val call: Call<NewsApiResponse> = if (!keyword.isNullOrEmpty()) {
             service.getNewsSearch(keyword, language, "publishedAt")
         } else {
             service.getNews(country)
         }
 
-        call.enqueue(object : Callback<News> {
+        call.enqueue(object : Callback<NewsApiResponse> {
 
-            override fun onResponse(call: Call<News?>, response: Response<News?>) {
+            override fun onResponse(call: Call<NewsApiResponse?>, response: Response<NewsApiResponse?>) {
                 val articles = response.body()?.article
 
                 if (response.isSuccessful && articles != null) {
@@ -43,7 +43,7 @@ class NewsRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
                 }
             }
 
-            override fun onFailure(call: Call<News?>, t: Throwable) {
+            override fun onFailure(call: Call<NewsApiResponse?>, t: Throwable) {
                 onFailureListener?.onFailure(t.toString())
             }
         })

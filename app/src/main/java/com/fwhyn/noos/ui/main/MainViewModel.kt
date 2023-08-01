@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.data.models.NewsParameter
+import com.fwhyn.noos.data.models.NewsRequestParameter
 import com.fwhyn.noos.data.repository.NewsDataRepository
 import com.fwhyn.noos.ui.helper.CustomResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(private val newsDataRepository: NewsData
     fun loadNews(keyword: String) {
         _articles.value = CustomResult.Loading
 
-        newsDataRepository.getNews(NewsParameter(keyword))
+        newsDataRepository.getNews(NewsRequestParameter(keyword))
             .addOnSuccessListener(object : OnSuccessListener<List<Article>> {
                 override fun onSuccess(data: List<Article>) {
                     _articles.value = CustomResult.Success(data)

@@ -1,7 +1,7 @@
 package com.fwhyn.noos.data.api
 
 import com.fwhyn.noos.data.api.NewsClient.Companion.API_KEY
-import com.fwhyn.noos.data.models.News
+import com.fwhyn.noos.data.models.NewsApiResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,7 +12,7 @@ interface NewsInterface {
     fun getNews(
         @Query("country") country: String,
         @Query("apiKey") apiKey: String = API_KEY
-    ): Call<News>
+    ): Call<NewsApiResponse>
 
     @GET("everything")
     fun getNewsSearch(
@@ -20,5 +20,5 @@ interface NewsInterface {
         @Query("language") language: String,
         @Query("sortBy") sortBy: String = "relevancy",
         @Query("apiKey") apiKey: String = API_KEY
-    ): Call<News>
+    ): Call<NewsApiResponse>
 }
