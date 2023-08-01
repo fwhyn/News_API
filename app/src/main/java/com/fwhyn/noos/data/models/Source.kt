@@ -11,5 +11,13 @@ data class Source(
 
     @SerializedName("name")
     @Expose
-    var name: String? = null
+    var name: String? = null,
+
+    @SerializedName("description")
+    @Expose
+    var description: String? = null,
+
+    @SerializedName("url")
+    @Expose
+    var url: String? = null
 ) : Serializable

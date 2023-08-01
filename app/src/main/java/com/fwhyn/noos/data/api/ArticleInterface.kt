@@ -1,24 +1,24 @@
 package com.fwhyn.noos.data.api
 
 import com.fwhyn.noos.data.api.NewsClient.Companion.API_KEY
-import com.fwhyn.noos.data.models.NewsApiResponse
+import com.fwhyn.noos.data.models.ArticleApiResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface NewsInterface {
+interface ArticleInterface {
 
     @GET("top-headlines")
-    fun getNews(
-        @Query("country") country: String,
+    fun getArticles(
+        @Query("sources") sources: String,
         @Query("apiKey") apiKey: String = API_KEY
-    ): Call<NewsApiResponse>
+    ): Call<ArticleApiResponse>
 
     @GET("everything")
-    fun getNewsSearch(
+    fun getArticlesSearch(
         @Query("q") keyword: String,
-        @Query("language") language: String,
+        @Query("sources") sources: String,
         @Query("sortBy") sortBy: String = "relevancy",
         @Query("apiKey") apiKey: String = API_KEY
-    ): Call<NewsApiResponse>
+    ): Call<ArticleApiResponse>
 }

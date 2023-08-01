@@ -4,16 +4,12 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class NewsApiResponse(
+data class SourceApiResponse(
     @SerializedName("status")
     @Expose
     var status: String? = null,
 
-    @SerializedName("totalResult")
+    @SerializedName("sources")
     @Expose
-    var totalResult: Int = 0,
-
-    @SerializedName("articles")
-    @Expose
-    var article: List<Article>? = null
+    var sources: List<Source>? = null
 ) : Serializable
