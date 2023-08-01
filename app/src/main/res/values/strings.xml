@@ -15,4 +15,7 @@
     <string name="share">Share</string>
     <string name="open_with_browser">Open with browser</string>
     <string name="link">Link</string>
+    <string name="category">Category</string>
+    <string name="source_name">Source Name</string>
+    <string name="description">Description</string>
 </resources>
