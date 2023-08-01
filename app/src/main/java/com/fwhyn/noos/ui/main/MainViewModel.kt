@@ -7,37 +7,23 @@ import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.ArticleRequestParameter
-import com.fwhyn.noos.data.repository.ArticleDataRepository
+import com.fwhyn.noos.data.models.Category
+import com.fwhyn.noos.data.repository.CategoryDataRepository
 import com.fwhyn.noos.ui.helper.CustomResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val articleDataRepository: ArticleDataRepository) : ViewModel() {
+class MainViewModel @Inject constructor(private val categoryDataRepository: CategoryDataRepository) : ViewModel() {
 
-    var temporaryKeyword: String = ""
-
-    private val _articles = MutableLiveData<CustomResult<List<Article>>>()
-    val articles: LiveData<CustomResult<List<Article>>> = _articles
+    private val _category = MutableLiveData<CustomResult<List<Category>>>()
+    val category: LiveData<CustomResult<List<Category>>> = _category
 
     init {
-        loadNews(temporaryKeyword)
+        loadCategory()
     }
 
-    fun loadNews(keyword: String) {
-        _articles.value = CustomResult.Loading
-
-        articleDataRepository.getNews(ArticleRequestParameter(keyword))
-            .addOnSuccessListener(object : OnSuccessListener<List<Article>> {
-                override fun onSuccess(data: List<Article>) {
-                    _articles.value = CustomResult.Success(data)
-                }
-
-            })
-            .addOnFailureListener(object : OnFailureListener<String> {
-                override fun onFailure(error: String) {
-                    _articles.value = CustomResult.Failure(error)
-                }
-            })
+    fun loadCategory() {
+        _category.value = CustomResult.Success(categoryDataRepository.getData(Unit))
     }
 }

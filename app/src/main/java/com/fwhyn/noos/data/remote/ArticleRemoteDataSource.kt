@@ -16,19 +16,17 @@ import javax.inject.Inject
 class ArticleRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
 
     private val service = retrofitClient.retrofit.create(ArticleInterface::class.java)
-    private val country = Utils.country
-    private val language = Utils.language
 
     var onSuccessListener: OnSuccessListener<List<Article>>? = null
     var onFailureListener: OnFailureListener<String>? = null
 
-    fun getNews(newParameter: ArticleRequestParameter): ArticleRemoteDataSource {
+    fun getArticles(newParameter: ArticleRequestParameter): ArticleRemoteDataSource {
         val keyword = newParameter.keyword
 
         val call: Call<ArticleApiResponse> = if (!keyword.isNullOrEmpty()) {
-            service.getArticlesSearch(keyword, language, "publishedAt")
+            service.getArticlesSearch(keyword, newParameter.source)
         } else {
-            service.getArticles(country)
+            service.getArticles(newParameter.source)
         }
 
         call.enqueue(object : Callback<ArticleApiResponse> {

@@ -2,26 +2,28 @@ package com.fwhyn.noos.data.repository
 
 import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
-import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.data.models.ArticleRequestParameter
-import com.fwhyn.noos.data.remote.ArticleRemoteDataSource
+import com.fwhyn.noos.data.models.Source
+import com.fwhyn.noos.data.models.SourceRequestParameter
+import com.fwhyn.noos.data.remote.SourceRemoteDataSource
 import javax.inject.Inject
 
-class SourceDataRepository @Inject constructor(private val articleRemoteDataSource: ArticleRemoteDataSource) {
-    fun getNews(articleRequestParameter: ArticleRequestParameter): SourceDataRepository {
-        articleRemoteDataSource.getNews(articleRequestParameter)
+class SourceDataRepository @Inject constructor(private val sourceRemoteDataSource: SourceRemoteDataSource) :
+    BaseDataRepository<SourceRequestParameter, SourceDataRepository> {
+
+    override fun getData(input: SourceRequestParameter): SourceDataRepository {
+        sourceRemoteDataSource.getSources(input)
 
         return this
     }
 
-    fun addOnSuccessListener(listener: OnSuccessListener<List<Article>>): SourceDataRepository {
-        articleRemoteDataSource.onSuccessListener = listener
+    fun addOnSuccessListener(listener: OnSuccessListener<List<Source>>): SourceDataRepository {
+        sourceRemoteDataSource.onSuccessListener = listener
 
         return this
     }
 
     fun addOnFailureListener(listener: OnFailureListener<String>): SourceDataRepository {
-        articleRemoteDataSource.onFailureListener = listener
+        sourceRemoteDataSource.onFailureListener = listener
 
         return this
     }

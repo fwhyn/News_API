@@ -24,7 +24,7 @@
                 android:layout_height="0dp"
                 android:layout_margin="@dimen/margin_small"
                 app:cardCornerRadius="10dp"
-                app:layout_constraintBottom_toTopOf="@+id/tv_category_name"
+                app:layout_constraintBottom_toTopOf="@+id/tv_category"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/tv_category_name"
+                android:id="@+id/tv_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_small"

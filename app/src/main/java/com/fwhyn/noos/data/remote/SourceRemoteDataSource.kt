@@ -1,13 +1,12 @@
 package com.fwhyn.noos.data.remote
 
-import com.fwhyn.noos.data.api.ArticleInterface
 import com.fwhyn.noos.data.api.NewsClient
+import com.fwhyn.noos.data.api.SourceInterface
 import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
-import com.fwhyn.noos.data.helper.Utils
-import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.data.models.ArticleApiResponse
-import com.fwhyn.noos.data.models.ArticleRequestParameter
+import com.fwhyn.noos.data.models.Source
+import com.fwhyn.noos.data.models.SourceApiResponse
+import com.fwhyn.noos.data.models.SourceRequestParameter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,35 +14,27 @@ import javax.inject.Inject
 
 class SourceRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
 
-    private val service = retrofitClient.retrofit.create(ArticleInterface::class.java)
-    private val country = Utils.country
-    private val language = Utils.language
+    private val service = retrofitClient.retrofit.create(SourceInterface::class.java)
 
-    var onSuccessListener: OnSuccessListener<List<Article>>? = null
+    var onSuccessListener: OnSuccessListener<List<Source>>? = null
     var onFailureListener: OnFailureListener<String>? = null
 
-    fun getNews(newParameter: ArticleRequestParameter): SourceRemoteDataSource {
-        val keyword = newParameter.keyword
+    fun getSources(parameter: SourceRequestParameter): SourceRemoteDataSource {
+        val call = service.getSources(parameter.category)
 
-        val call: Call<ArticleApiResponse> = if (!keyword.isNullOrEmpty()) {
-            service.getArticlesSearch(keyword, language, "publishedAt")
-        } else {
-            service.getArticles(country)
-        }
+        call.enqueue(object : Callback<SourceApiResponse> {
 
-        call.enqueue(object : Callback<ArticleApiResponse> {
+            override fun onResponse(call: Call<SourceApiResponse?>, response: Response<SourceApiResponse?>) {
+                val sources = response.body()?.sources
 
-            override fun onResponse(call: Call<ArticleApiResponse?>, response: Response<ArticleApiResponse?>) {
-                val articles = response.body()?.article
-
-                if (response.isSuccessful && articles != null) {
-                    onSuccessListener?.onSuccess(articles)
+                if (response.isSuccessful && sources != null) {
+                    onSuccessListener?.onSuccess(sources)
                 } else {
                     onFailureListener?.onFailure(response.code().toString())
                 }
             }
 
-            override fun onFailure(call: Call<ArticleApiResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<SourceApiResponse?>, t: Throwable) {
                 onFailureListener?.onFailure(t.toString())
             }
         })

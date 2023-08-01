@@ -7,9 +7,11 @@ import com.fwhyn.noos.data.models.ArticleRequestParameter
 import com.fwhyn.noos.data.remote.ArticleRemoteDataSource
 import javax.inject.Inject
 
-class ArticleDataRepository @Inject constructor(private val articleRemoteDataSource: ArticleRemoteDataSource) {
-    fun getNews(articleRequestParameter: ArticleRequestParameter): ArticleDataRepository {
-        articleRemoteDataSource.getNews(articleRequestParameter)
+class ArticleDataRepository @Inject constructor(private val articleRemoteDataSource: ArticleRemoteDataSource):
+    BaseDataRepository<ArticleRequestParameter, ArticleDataRepository> {
+
+    override fun getData(input: ArticleRequestParameter): ArticleDataRepository {
+        articleRemoteDataSource.getArticles(input)
 
         return this
     }

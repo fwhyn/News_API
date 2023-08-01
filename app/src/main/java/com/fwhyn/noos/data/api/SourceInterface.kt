@@ -2,6 +2,7 @@ package com.fwhyn.noos.data.api
 
 import com.fwhyn.noos.data.api.NewsClient.Companion.API_KEY
 import com.fwhyn.noos.data.models.ArticleApiResponse
+import com.fwhyn.noos.data.models.SourceApiResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,5 +13,5 @@ interface SourceInterface {
     fun getSources(
         @Query("category") category: String,
         @Query("apiKey") apiKey: String = API_KEY
-    ): Call<ArticleApiResponse>
+    ): Call<SourceApiResponse>
 }
