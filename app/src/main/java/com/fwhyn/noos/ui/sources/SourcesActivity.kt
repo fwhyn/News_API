@@ -65,9 +65,14 @@ class SourcesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefresh
     }
 
     private fun initView() {
+        initTitle()
         initSwipeRefresh()
         initArticlesView()
         initErrorView()
+    }
+
+    private fun initTitle() {
+        viewBinding.tvSourceTitle.text = getString(R.string.source)
     }
 
     private fun initSwipeRefresh() {

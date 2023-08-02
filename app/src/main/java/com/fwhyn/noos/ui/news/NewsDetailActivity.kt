@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -16,18 +18,23 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.fwhyn.noos.R
 import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
+import com.fwhyn.noos.basecomponent.baseclass.ErrorView
+import com.fwhyn.noos.basecomponent.baseclass.ProgressBarView
 import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.databinding.ActivityNewsDetailBinding
 import com.fwhyn.noos.databinding.ToolbarCustomBinding
 import com.fwhyn.noos.ui.helper.Constants
+import com.fwhyn.noos.ui.helper.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
 
     private lateinit var toolbar: ToolbarCustomBinding
+    private lateinit var progressBar: ProgressBarView
     private lateinit var webView: WebView
+    private lateinit var errorView: ErrorView
 
     private val viewModel: NewsDetailViewModel by viewModels()
 
@@ -57,16 +64,21 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
 
     private fun initView() {
         initAppbar()
+        iniProgressBar()
         initWebView()
     }
 
     private fun initAppbar() {
-//        toolbar = viewBinding.toolbarCustom
+        toolbar = viewBinding.toolbarCustom
 
-//        setSupportActionBar(toolbar.toolbar)
+        setSupportActionBar(toolbar.toolbar)
         supportActionBar?.title = ""
         supportActionBar?.subtitle = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun iniProgressBar() {
+        progressBar = ProgressBarView(viewBinding.viewProgressBar)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -78,43 +90,58 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
             settings.domStorageEnabled = true
 
             webViewClient = object : WebViewClient() {
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    super.onPageStarted(view, url, favicon)
-
-
-                }
-
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-
-
-                }
-
                 override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                     super.onReceivedError(view, request, error)
 
+                    progressBar.showLayout(false)
+                }
+            }
 
+            webChromeClient= object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    super.onProgressChanged(view, newProgress)
+
+                    progressBar.showLayout(newProgress != 100)
                 }
             }
         }
     }
 
+    private fun initErrorView() {
+        errorView = ErrorView(viewBinding.viewError)
+        errorView.setButton({
+            loadArticle(viewModel.article.value)
+
+        })
+    }
+
     private fun initObserver() {
         viewModel.article.observe(this) {
-//            toolbar.tvAppbarTitle.text = it.source?.name
-//            toolbar.tvAppbarSubtitle.text = it.url
+            updateToolbar(it)
+            updateHeader(it)
+            loadArticle(it)
+        }
+    }
 
-            supportActionBar?.title = it.source?.name
-            supportActionBar?.subtitle = it.url
+    private fun updateToolbar(article: Article) {
+        toolbar.tvAppbarTitle.text = article.source?.name
+        toolbar.tvAppbarSubtitle.text = article.url
+    }
 
-            it.url?.let { url -> webView.loadUrl(url) }
+    private fun updateHeader(article: Article) {
+        viewBinding.run {
+            tvTitle.text = article.title
+            tvAuthor.text = article.author
+            tvPublishedAt.text = article.publishedAt?.let { date -> Utils.getNewDateFormat(date) }
+            tvTime.text = ""
+        }
+    }
 
-            viewBinding.run {
-                tvTitle.text = it.title
-                tvAuthor.text = it.author
-                tvPublishedAt.text = it.publishedAt?.let { date -> Utils.getNewDateFormat(date) }
-                tvTime.text = ""
-            }
+    private fun loadArticle(article: Article?) {
+        if (article?.url != null) {
+            webView.loadUrl(article.url!!)
+        } else {
+            showToast("Error Load Article")
         }
     }
 

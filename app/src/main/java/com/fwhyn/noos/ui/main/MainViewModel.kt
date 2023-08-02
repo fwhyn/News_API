@@ -24,11 +24,11 @@ class MainViewModel @Inject constructor(
 
     private fun loadCategory() {
         categoryDataRepository
-            .startGettingData(Unit)
             .addOnSuccessListener(object : OnSuccessListener<List<Category>> {
                 override fun onSuccess(data: List<Category>) {
                     _category.value = CustomResult.Success(data)
                 }
             })
+            .startGettingData(Unit)
     }
 }

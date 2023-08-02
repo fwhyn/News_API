@@ -68,9 +68,14 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     }
 
     private fun initView() {
+        initTitle()
         initSwipeRefresh()
         initArticlesView()
         initErrorView()
+    }
+
+    private fun initTitle() {
+        viewBinding.tvSourceTitle.text = getString(R.string.title)
     }
 
     private fun initSwipeRefresh() {
@@ -139,11 +144,13 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     private fun onLoading() {
         swipeRefresh.isRefreshing = true
         errorView.layoutError.visibility = View.GONE
+        viewBinding.tvSourceTitle.text = getString(R.string.getting_news)
     }
 
     private fun onSuccess(data: CustomResult.Success<List<Article>>) {
         swipeRefresh.isRefreshing = false
         errorView.layoutError.visibility = View.GONE
+        viewBinding.tvSourceTitle.text = viewModel.source?.name
 
         showArticles(data.value)
     }

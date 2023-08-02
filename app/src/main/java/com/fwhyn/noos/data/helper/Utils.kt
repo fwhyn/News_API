@@ -4,8 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.ui.helper.Constants
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random

@@ -7,14 +7,21 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fwhyn.noos.R
 import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
 import com.fwhyn.noos.data.models.Category
 import com.fwhyn.noos.databinding.ActivityMainBinding
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.CustomResult
+import com.fwhyn.noos.ui.helper.enableSwipeRefresh
 import com.fwhyn.noos.ui.sources.SourcesActivity
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO kasih warna di category
+// TODO kasih warna di source
+// TODO kasih info kalo isi berita kosong
+// TODO error ketika gak ada internet
+// TODO add success listener dulu, baru get data
 
 @AndroidEntryPoint
 class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
@@ -51,7 +58,17 @@ class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
     }
 
     private fun initView() {
+        initTitle()
+        initSwipeRefresh()
         initCategoriesView()
+    }
+
+    private fun initTitle() {
+        viewBinding.tvSourceTitle.text = getString(R.string.category)
+    }
+
+    private fun initSwipeRefresh() {
+        viewBinding.layoutSwipeRefresh.enableSwipeRefresh(false)
     }
 
     private fun initCategoriesView() {
