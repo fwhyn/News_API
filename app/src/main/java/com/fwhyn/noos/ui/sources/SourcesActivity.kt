@@ -1,13 +1,10 @@
 package com.fwhyn.noos.ui.sources
 
 import android.annotation.SuppressLint
-import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +20,6 @@ import com.fwhyn.noos.ui.articles.ArticlesActivity
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
-import com.fwhyn.noos.ui.helper.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -96,7 +92,7 @@ class SourcesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefresh
         sourcesView.run {
             layoutManager = LinearLayoutManager(this@SourcesActivity)
             adapter = sourceAdapter
-            addItemDecoration(DividerItemDecoration(this@SourcesActivity, DividerItemDecoration.HORIZONTAL))
+            addItemDecoration(DividerItemDecoration(this@SourcesActivity, DividerItemDecoration.VERTICAL))
         }
     }
 

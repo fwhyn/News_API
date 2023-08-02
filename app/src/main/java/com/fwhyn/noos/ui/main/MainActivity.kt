@@ -17,8 +17,6 @@ import com.fwhyn.noos.ui.helper.enableSwipeRefresh
 import com.fwhyn.noos.ui.sources.SourcesActivity
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO kasih warna di category
-// TODO kasih warna di source
 // TODO kasih info kalo isi berita kosong
 // TODO search feature
 

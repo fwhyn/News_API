@@ -53,6 +53,7 @@ class CategoryAdapter(
 
         fun bind(category: Category) {
             categoryName.text = category.name
+            thumbnail.setBackgroundColor(category.colorCode)
 
             view.setOnClickListener {
                 clickListener(category)
