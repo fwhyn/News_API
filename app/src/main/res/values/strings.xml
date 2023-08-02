@@ -19,5 +19,6 @@
     <string name="source_name">Source Name</string>
     <string name="description">Description</string>
     <string name="search_news">Search News</string>
-    <string name="getting_news">Getting News...</string>
+    <string name="getting_news">Getting News…</string>
+    <string name="data_empty">Data Is Empty</string>
 </resources>

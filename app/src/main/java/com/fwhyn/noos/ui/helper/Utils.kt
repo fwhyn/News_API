@@ -1,21 +1,18 @@
 package com.fwhyn.noos.ui.helper
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.ui.helper.Constants
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Random
+import com.fwhyn.noos.R
 
 object Utils {
 
+}
+
+fun Context.notifyIfListEmpty(data: List<Any>) {
+    if (data.isEmpty()) {
+        showToast(getString(R.string.data_empty))
+    }
 }
 
 fun Context.showToast(text: String) {

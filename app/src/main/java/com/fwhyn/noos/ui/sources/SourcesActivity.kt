@@ -20,6 +20,7 @@ import com.fwhyn.noos.ui.articles.ArticlesActivity
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
+import com.fwhyn.noos.ui.helper.notifyIfListEmpty
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -144,6 +145,7 @@ class SourcesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefresh
         swipeRefresh.visibility = View.VISIBLE
         errorView.layoutError.visibility = View.GONE
 
+        notifyIfListEmpty(data.value)
         showSources(data.value)
     }
 

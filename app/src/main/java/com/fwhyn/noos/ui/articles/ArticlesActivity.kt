@@ -22,6 +22,7 @@ import com.fwhyn.noos.databinding.ActivityMainBinding
 import com.fwhyn.noos.databinding.ViewErrorBinding
 import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
+import com.fwhyn.noos.ui.helper.notifyIfListEmpty
 import com.fwhyn.noos.ui.helper.showToast
 import com.fwhyn.noos.ui.news.NewsDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -155,6 +156,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         swipeRefresh.visibility = View.VISIBLE
         viewBinding.tvSourceTitle.text = viewModel.source?.name
 
+        notifyIfListEmpty(data.value)
         showArticles(data.value)
     }
 
