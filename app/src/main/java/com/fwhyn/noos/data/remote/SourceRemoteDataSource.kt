@@ -12,9 +12,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class SourceRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
+class SourceRemoteDataSource @Inject constructor(client: NewsClient) {
 
-    private val service = retrofitClient.retrofit.create(SourceInterface::class.java)
+    private val service = client.retrofit.create(SourceInterface::class.java)
 
     var onSuccessListener: OnSuccessListener<List<Source>>? = null
     var onFailureListener: OnFailureListener<Throwable>? = null

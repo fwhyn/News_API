@@ -13,7 +13,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
-import com.fwhyn.noos.databinding.ItemNewsBinding
+import com.fwhyn.noos.databinding.ItemArticleBinding
 
 
 class ArticleAdapter(
@@ -25,7 +25,7 @@ class ArticleAdapter(
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
-        val view = ItemNewsBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        val view = ItemArticleBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -53,7 +53,7 @@ class ArticleAdapter(
         private lateinit var time: TextView
         private lateinit var thumbnail: ImageView
 
-        constructor(itemBinding: ItemNewsBinding) : this(itemBinding.root) {
+        constructor(itemBinding: ItemArticleBinding) : this(itemBinding.root) {
             itemBinding.run {
                 source = tvSource
                 author = tvAuthor

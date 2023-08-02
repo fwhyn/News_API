@@ -4,7 +4,6 @@ import com.fwhyn.noos.data.api.ArticleInterface
 import com.fwhyn.noos.data.api.NewsClient
 import com.fwhyn.noos.data.helper.OnFailureListener
 import com.fwhyn.noos.data.helper.OnSuccessListener
-import com.fwhyn.noos.data.helper.Utils
 import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.ArticleApiResponse
 import com.fwhyn.noos.data.models.ArticleRequestParameter
@@ -13,9 +12,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class ArticleRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
+class ArticleRemoteDataSource @Inject constructor(client: NewsClient) {
 
-    private val service = retrofitClient.retrofit.create(ArticleInterface::class.java)
+    private val service = client.retrofit.create(ArticleInterface::class.java)
 
     var onSuccessListener: OnSuccessListener<List<Article>>? = null
     var onFailureListener: OnFailureListener<Throwable>? = null

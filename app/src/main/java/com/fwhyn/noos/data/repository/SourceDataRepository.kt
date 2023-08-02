@@ -8,7 +8,7 @@ import com.fwhyn.noos.data.remote.SourceRemoteDataSource
 import javax.inject.Inject
 
 class SourceDataRepository @Inject constructor(private val sourceRemoteDataSource: SourceRemoteDataSource) :
-    BaseDataRepository<SourceRequestParameter, SourceDataRepository> {
+    BaseDataRepository<SourceRequestParameter, List<Source>> {
 
     override fun startGettingData(input: SourceRequestParameter): SourceDataRepository {
         sourceRemoteDataSource.getSources(input)
@@ -16,13 +16,13 @@ class SourceDataRepository @Inject constructor(private val sourceRemoteDataSourc
         return this
     }
 
-    fun addOnSuccessListener(listener: OnSuccessListener<List<Source>>): SourceDataRepository {
+    override fun addOnSuccessListener(listener: OnSuccessListener<List<Source>>): SourceDataRepository {
         sourceRemoteDataSource.onSuccessListener = listener
 
         return this
     }
 
-    fun addOnFailureListener(listener: OnFailureListener<String>): SourceDataRepository {
+    override fun addOnFailureListener(listener: OnFailureListener<Throwable>): SourceDataRepository {
         sourceRemoteDataSource.onFailureListener = listener
 
         return this
