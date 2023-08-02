@@ -121,6 +121,7 @@ class SourcesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefresh
 
     private fun onFailure(value: CustomResult.Failure) {
         swipeRefresh.isRefreshing = false
+        swipeRefresh.visibility = View.GONE
 
         setViewError(value.throwable.message)
     }
@@ -135,11 +136,13 @@ class SourcesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefresh
 
     private fun onLoading() {
         swipeRefresh.isRefreshing = true
+        swipeRefresh.visibility = View.VISIBLE
         errorView.layoutError.visibility = View.GONE
     }
 
     private fun onSuccess(data: CustomResult.Success<List<Source>>) {
         swipeRefresh.isRefreshing = false
+        swipeRefresh.visibility = View.VISIBLE
         errorView.layoutError.visibility = View.GONE
 
         showSources(data.value)

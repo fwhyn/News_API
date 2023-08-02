@@ -129,6 +129,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
 
     private fun onFailure(value: CustomResult.Failure) {
         swipeRefresh.isRefreshing = false
+        swipeRefresh.visibility = View.GONE
 
         value.throwable.message?.let { setViewError(it) }
     }
@@ -143,6 +144,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
 
     private fun onLoading() {
         swipeRefresh.isRefreshing = true
+        swipeRefresh.visibility = View.VISIBLE
         errorView.layoutError.visibility = View.GONE
         viewBinding.tvSourceTitle.text = getString(R.string.getting_news)
     }
@@ -150,6 +152,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     private fun onSuccess(data: CustomResult.Success<List<Article>>) {
         swipeRefresh.isRefreshing = false
         errorView.layoutError.visibility = View.GONE
+        swipeRefresh.visibility = View.VISIBLE
         viewBinding.tvSourceTitle.text = viewModel.source?.name
 
         showArticles(data.value)

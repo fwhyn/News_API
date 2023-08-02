@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 // TODO kasih info kalo isi berita kosong
 // TODO error ketika gak ada internet
 // TODO add success listener dulu, baru get data
+// TODO search feature
 
 @AndroidEntryPoint
 class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
