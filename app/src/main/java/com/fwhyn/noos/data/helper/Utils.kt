@@ -1,7 +1,11 @@
 package com.fwhyn.noos.data.helper
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import com.fwhyn.noos.data.models.Article
+import com.fwhyn.noos.ui.helper.Constants
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
@@ -67,4 +71,12 @@ object Utils {
 
             return country.lowercase(Locale.getDefault())
         }
+}
+
+fun <T : java.io.Serializable> Intent.getSerializable(key: String, clazz: Class<T>): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        this.getSerializableExtra(key, clazz)
+    } else {
+        this.getSerializableExtra(key) as? T
+    }
 }

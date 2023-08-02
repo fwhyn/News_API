@@ -17,7 +17,7 @@ class SourceRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
     private val service = retrofitClient.retrofit.create(SourceInterface::class.java)
 
     var onSuccessListener: OnSuccessListener<List<Source>>? = null
-    var onFailureListener: OnFailureListener<String>? = null
+    var onFailureListener: OnFailureListener<Throwable>? = null
 
     fun getSources(parameter: SourceRequestParameter): SourceRemoteDataSource {
         val call = service.getSources(parameter.category)
@@ -30,12 +30,12 @@ class SourceRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
                 if (response.isSuccessful && sources != null) {
                     onSuccessListener?.onSuccess(sources)
                 } else {
-                    onFailureListener?.onFailure(response.code().toString())
+                    onFailureListener?.onFailure(Throwable(response.code().toString()))
                 }
             }
 
             override fun onFailure(call: Call<SourceApiResponse?>, t: Throwable) {
-                onFailureListener?.onFailure(t.toString())
+                onFailureListener?.onFailure(t)
             }
         })
 

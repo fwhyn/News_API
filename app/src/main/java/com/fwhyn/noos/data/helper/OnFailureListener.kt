@@ -1,5 +1,5 @@
 package com.fwhyn.noos.data.helper
 
-interface OnFailureListener<ErrorResult> {
-    fun onFailure(error: ErrorResult)
+interface OnFailureListener<Type> {
+    fun onFailure(error: Type)
 }

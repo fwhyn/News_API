@@ -6,5 +6,5 @@ sealed class CustomResult<out T> {
 
     object Loading : CustomResult<Nothing>()
 
-    data class Failure(val errorMessage: String) : CustomResult<Nothing>()
+    data class Failure(val throwable: Throwable) : CustomResult<Nothing>()
 }

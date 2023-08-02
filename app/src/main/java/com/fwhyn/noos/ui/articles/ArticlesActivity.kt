@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -16,11 +17,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fwhyn.noos.R
 import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
+import com.fwhyn.noos.data.helper.getSerializable
 import com.fwhyn.noos.data.models.Article
+import com.fwhyn.noos.data.models.Source
 import com.fwhyn.noos.databinding.ActivityMainBinding
 import com.fwhyn.noos.databinding.ViewErrorBinding
 import com.fwhyn.noos.ui.adapters.NewsAdapter
+import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
+import com.fwhyn.noos.ui.helper.showToast
 import com.fwhyn.noos.ui.news.NewsDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,13 +47,17 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        init()
+        init(savedInstanceState)
     }
 
     // ----------------------------------------------------------------
-    private fun init() {
+    private fun init(savedInstanceState: Bundle?) {
         initObserver()
         initView()
+
+        if (savedInstanceState == null) {
+            loadArticles()
+        }
     }
 
     private fun initObserver() {
@@ -103,15 +112,23 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         errorView.run {
             layoutError.visibility = View.GONE
             btnRetry.setOnClickListener {
-                viewModel.loadNews(viewModel.temporaryKeyword)
+                viewModel.run {
+                    loadArticles(source, temporaryKeyword)
+                }
             }
+        }
+    }
+
+    private fun loadArticles() {
+        viewModel.run {
+            loadArticles(intent.getSerializable(SOURCE, Source::class.java), temporaryKeyword)
         }
     }
 
     private fun onFailure(value: CustomResult.Failure) {
         swipeRefresh.isRefreshing = false
 
-        setViewError(value.errorMessage)
+        value.throwable.message?.let { setViewError(it) }
     }
 
     private fun setViewError(data: String) {
@@ -131,11 +148,11 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         swipeRefresh.isRefreshing = false
         errorView.layoutError.visibility = View.GONE
 
-        showNewsList(data.value)
+        showArticles(data.value)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun showNewsList(data: List<Article>) {
+    private fun showArticles(data: List<Article>) {
         articles.clear()
         articles.addAll(data)
         newsAdapter.notifyDataSetChanged()
@@ -148,14 +165,17 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView?
         val searchMenuItem = menu.findItem(R.id.action_search)
         searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.queryHint = "Search Latest News..."
+        searchView.queryHint = "Search News"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.length > 2) {
-                    viewModel.temporaryKeyword = query
-                    viewModel.loadNews(viewModel.temporaryKeyword)
+                    viewModel.run {
+                        temporaryKeyword = query
+                        loadArticles(source, temporaryKeyword)
+                    }
+
                 } else {
-                    Toast.makeText(this@ArticlesActivity, "Type more than two letters!", Toast.LENGTH_SHORT).show()
+                    showToast("Please type more than two letters.")
                 }
 
                 return false
@@ -172,7 +192,9 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     }
 
     override fun onRefresh() {
-        viewModel.temporaryKeyword = ""
-        viewModel.loadNews(viewModel.temporaryKeyword)
+        viewModel.run {
+            temporaryKeyword = ""
+            loadArticles(source, temporaryKeyword)
+        }
     }
 }

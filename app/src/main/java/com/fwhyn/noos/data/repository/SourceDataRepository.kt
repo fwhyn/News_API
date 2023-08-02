@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SourceDataRepository @Inject constructor(private val sourceRemoteDataSource: SourceRemoteDataSource) :
     BaseDataRepository<SourceRequestParameter, SourceDataRepository> {
 
-    override fun getData(input: SourceRequestParameter): SourceDataRepository {
+    override fun startGettingData(input: SourceRequestParameter): SourceDataRepository {
         sourceRemoteDataSource.getSources(input)
 
         return this

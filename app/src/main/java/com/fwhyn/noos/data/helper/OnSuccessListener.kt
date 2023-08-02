@@ -1,5 +1,5 @@
 package com.fwhyn.noos.data.helper
 
-interface OnSuccessListener<DataResult> {
-    fun onSuccess(data: DataResult)
+interface OnSuccessListener<Type> {
+    fun onSuccess(data: Type)
 }

@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
 import com.fwhyn.noos.data.models.Category
@@ -15,7 +14,9 @@ import com.fwhyn.noos.ui.adapters.CategoryAdapter
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.CustomResult
 import com.fwhyn.noos.ui.news.NewsDetailActivity
+import com.fwhyn.noos.ui.sources.SourcesActivity
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
@@ -57,21 +58,21 @@ class MainActivity : BaseActivityBinding<ActivityMainBinding>() {
 
     private fun initCategoriesView() {
         categoriesView = viewBinding.recyclerViewNews
+
         categoryAdapter = CategoryAdapter(this@MainActivity, categories) { category ->
             onItemClick(category)
         }
 
         categoriesView.run {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            itemAnimator = DefaultItemAnimator()
-            isNestedScrollingEnabled = false
-            addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+            layoutManager = GridLayoutManager(applicationContext, 2)
             adapter = categoryAdapter
+            addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
         }
     }
 
     private fun onItemClick(category: Category) {
-        val intent = Intent(this@MainActivity, NewsDetailActivity::class.java)
+        val intent = Intent(this@MainActivity, SourcesActivity::class.java)
+
         intent.putExtra(CATEGORY, category)
         startActivity(intent)
     }

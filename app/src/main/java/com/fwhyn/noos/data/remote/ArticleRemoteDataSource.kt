@@ -18,7 +18,7 @@ class ArticleRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
     private val service = retrofitClient.retrofit.create(ArticleInterface::class.java)
 
     var onSuccessListener: OnSuccessListener<List<Article>>? = null
-    var onFailureListener: OnFailureListener<String>? = null
+    var onFailureListener: OnFailureListener<Throwable>? = null
 
     fun getArticles(newParameter: ArticleRequestParameter): ArticleRemoteDataSource {
         val keyword = newParameter.keyword
@@ -37,12 +37,12 @@ class ArticleRemoteDataSource @Inject constructor(retrofitClient: NewsClient) {
                 if (response.isSuccessful && articles != null) {
                     onSuccessListener?.onSuccess(articles)
                 } else {
-                    onFailureListener?.onFailure(response.code().toString())
+                    onFailureListener?.onFailure(Throwable(response.code().toString()))
                 }
             }
 
             override fun onFailure(call: Call<ArticleApiResponse?>, t: Throwable) {
-                onFailureListener?.onFailure(t.toString())
+                onFailureListener?.onFailure(t)
             }
         })
 

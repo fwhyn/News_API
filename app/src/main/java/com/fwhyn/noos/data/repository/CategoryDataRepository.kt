@@ -10,7 +10,17 @@ import javax.inject.Inject
 class CategoryDataRepository @Inject constructor(private val categoryLocalDataSource: CategoryLocalDataSource) :
     BaseDataRepository<Unit, List<Category>> {
 
-    override fun getData(input: Unit): List<Category> {
-        return categoryLocalDataSource.getCategories()
+    private var listener: OnSuccessListener<List<Category>>? = null
+
+    override fun startGettingData(input: Unit): CategoryDataRepository {
+        listener?.onSuccess(categoryLocalDataSource.getCategories())
+
+        return this
+    }
+
+    override fun addOnSuccessListener(listener: OnSuccessListener<List<Category>>): CategoryDataRepository {
+        this.listener = listener
+
+        return this
     }
 }

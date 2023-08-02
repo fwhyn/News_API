@@ -7,22 +7,24 @@ import com.fwhyn.noos.data.models.ArticleRequestParameter
 import com.fwhyn.noos.data.remote.ArticleRemoteDataSource
 import javax.inject.Inject
 
-class ArticleDataRepository @Inject constructor(private val articleRemoteDataSource: ArticleRemoteDataSource):
-    BaseDataRepository<ArticleRequestParameter, ArticleDataRepository> {
+class ArticleDataRepository @Inject constructor(private val articleRemoteDataSource: ArticleRemoteDataSource) :
+    BaseDataRepository<ArticleRequestParameter, List<Article>> {
 
-    override fun getData(input: ArticleRequestParameter): ArticleDataRepository {
+    override fun startGettingData(input: ArticleRequestParameter): BaseDataRepository<ArticleRequestParameter, List<Article>> {
         articleRemoteDataSource.getArticles(input)
 
         return this
     }
 
-    fun addOnSuccessListener(listener: OnSuccessListener<List<Article>>): ArticleDataRepository {
+    override fun addOnSuccessListener(listener: OnSuccessListener<List<Article>>):
+            BaseDataRepository<ArticleRequestParameter, List<Article>> {
         articleRemoteDataSource.onSuccessListener = listener
 
         return this
     }
 
-    fun addOnFailureListener(listener: OnFailureListener<String>): ArticleDataRepository {
+    override fun addOnFailureListener(listener: OnFailureListener<Throwable>):
+            BaseDataRepository<ArticleRequestParameter, List<Article>> {
         articleRemoteDataSource.onFailureListener = listener
 
         return this
