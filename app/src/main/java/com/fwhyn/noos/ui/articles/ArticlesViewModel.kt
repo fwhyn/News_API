@@ -18,18 +18,18 @@ class ArticlesViewModel @Inject constructor(
     private val articleDataRepository: BaseDataRepository<ArticleRequestParameter, List<Article>>
 ) : ViewModel() {
 
-    var temporaryKeyword: String = ""
+    var temporaryKeyword: String? = null
     var source: Source? = null
 
     private val _articles = MutableLiveData<CustomResult<List<Article>>>()
     val articles: LiveData<CustomResult<List<Article>>> = _articles
 
-    fun loadArticles(source: Source?, keyword: String) {
+    fun loadArticles(keyword: String?, source: Source?) {
         this.source = source
         _articles.value = CustomResult.Loading
 
-        if (source != null) {
-            articleDataRepository.startGettingData(ArticleRequestParameter(source.id, keyword))
+        if (source?.id != null) {
+            articleDataRepository
                 .addOnSuccessListener(object : OnSuccessListener<List<Article>> {
                     override fun onSuccess(data: List<Article>) {
                         _articles.value = CustomResult.Success(data)
@@ -41,6 +41,7 @@ class ArticlesViewModel @Inject constructor(
                         _articles.value = CustomResult.Failure(error)
                     }
                 })
+                .startGettingData(ArticleRequestParameter(keyword, source.id!!))
         } else {
             _articles.value = CustomResult.Failure(Throwable("No Source Found"))
         }

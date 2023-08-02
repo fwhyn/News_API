@@ -1,11 +1,13 @@
 package com.fwhyn.noos.ui.sources
 
 import android.annotation.SuppressLint
+import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +23,7 @@ import com.fwhyn.noos.ui.articles.ArticlesActivity
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
+import com.fwhyn.noos.ui.helper.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -155,38 +158,12 @@ class SourcesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefresh
         sourceAdapter.notifyDataSetChanged()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        val inflater = menuInflater
-//        inflater.inflate(R.menu.menu_main, menu)
-//        val searchManager = getSystemService(SEARCH_SERVICE) as SearchManager
-//        val searchView = menu.findItem(R.id.action_search).actionView as? SearchView
-//        val searchMenuItem = menu.findItem(R.id.action_search)
-//        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-//        searchView.queryHint = "Search Sources"
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String): Boolean {
-//                if (query.length > 2) {
-//                    viewModel.temporaryKeyword = query
-//                    // viewModel.loadSources(viewModel.category)
-//                } else {
-//                    Toast.makeText(this@SourcesActivity, "Type more than two letters!", Toast.LENGTH_SHORT).show()
-//                }
-//
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String): Boolean {
-//                viewModel.temporaryKeyword = newText
-//
-//                return false
-//            }
-//        })
-//        searchMenuItem.icon!!.setVisible(false, false)
-        return true
+    private fun resetSources() {
+        viewModel.temporaryKeyword = ""
+        viewModel.loadSources(viewModel.category)
     }
 
     override fun onRefresh() {
-        viewModel.temporaryKeyword = ""
-        viewModel.loadSources(viewModel.category)
+        resetSources()
     }
 }

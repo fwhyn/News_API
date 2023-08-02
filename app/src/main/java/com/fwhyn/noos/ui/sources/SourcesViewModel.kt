@@ -29,7 +29,7 @@ class SourcesViewModel @Inject constructor(
         _sources.value = CustomResult.Loading
 
         if (category != null) {
-            sourceDataRepository.startGettingData(SourceRequestParameter(category.id))
+            sourceDataRepository
                 .addOnSuccessListener(object : OnSuccessListener<List<Source>> {
                     override fun onSuccess(data: List<Source>) {
                         _sources.value = CustomResult.Success(data)
@@ -41,6 +41,7 @@ class SourcesViewModel @Inject constructor(
                         _sources.value = CustomResult.Failure(error)
                     }
                 })
+                .startGettingData(SourceRequestParameter(category.id))
         } else {
             _sources.value = CustomResult.Failure(Throwable("No Category Found"))
         }

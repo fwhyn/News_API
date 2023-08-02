@@ -53,7 +53,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         initView()
 
         if (savedInstanceState == null) {
-            loadArticles()
+            loadArticlesFirstTime()
         }
     }
 
@@ -115,15 +115,15 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
             layoutError.visibility = View.GONE
             btnRetry.setOnClickListener {
                 viewModel.run {
-                    loadArticles(source, temporaryKeyword)
+                    loadArticles(temporaryKeyword, source)
                 }
             }
         }
     }
 
-    private fun loadArticles() {
+    private fun loadArticlesFirstTime() {
         viewModel.run {
-            loadArticles(intent.getSerializable(SOURCE, Source::class.java), temporaryKeyword)
+            loadArticles(temporaryKeyword, intent.getSerializable(SOURCE, Source::class.java))
         }
     }
 
@@ -165,8 +165,15 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         articleAdapter.notifyDataSetChanged()
     }
 
+    private fun resetArticles() {
+        viewModel.run {
+            temporaryKeyword = null
+            loadArticles(temporaryKeyword, source)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_search, menu)
 
         val searchManager = getSystemService(SEARCH_SERVICE) as SearchManager
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
@@ -181,7 +188,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
                     if (query.length > 2) {
                         viewModel.run {
                             temporaryKeyword = query
-                            loadArticles(source, temporaryKeyword)
+                            loadArticles(temporaryKeyword, source)
                         }
 
                     } else {
@@ -198,15 +205,18 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
                 }
 
             })
+
+            setOnCloseListener {
+                resetArticles()
+
+                false
+            }
         }
 
         return true
     }
 
     override fun onRefresh() {
-        viewModel.run {
-            temporaryKeyword = ""
-            loadArticles(source, temporaryKeyword)
-        }
+        resetArticles()
     }
 }

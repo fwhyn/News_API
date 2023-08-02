@@ -21,7 +21,6 @@ class ArticleRemoteDataSource @Inject constructor(client: NewsClient) {
 
     fun getArticles(newParameter: ArticleRequestParameter): ArticleRemoteDataSource {
         val keyword = newParameter.keyword
-
         val call: Call<ArticleApiResponse> = if (!keyword.isNullOrEmpty()) {
             service.getArticlesSearch(keyword, newParameter.source)
         } else {
