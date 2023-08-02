@@ -17,12 +17,10 @@ import com.fwhyn.noos.data.models.Category
 import com.fwhyn.noos.data.models.Source
 import com.fwhyn.noos.databinding.ActivityMainBinding
 import com.fwhyn.noos.databinding.ViewErrorBinding
-import com.fwhyn.noos.ui.adapters.SourceAdapter
 import com.fwhyn.noos.ui.articles.ArticlesActivity
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
-import com.fwhyn.noos.ui.news.NewsDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

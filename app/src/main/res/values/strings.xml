@@ -18,4 +18,5 @@
     <string name="category">Category</string>
     <string name="source_name">Source Name</string>
     <string name="description">Description</string>
+    <string name="search_news">Search News</string>
 </resources>

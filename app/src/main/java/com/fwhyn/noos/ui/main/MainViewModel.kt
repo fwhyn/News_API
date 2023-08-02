@@ -11,8 +11,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val categoryDataRepository: BaseDataRepository<Unit, List<Category>>) :
-    ViewModel() {
+class MainViewModel @Inject constructor(
+    private val categoryDataRepository: BaseDataRepository<Unit, List<Category>>
+) : ViewModel() {
 
     private val _category = MutableLiveData<CustomResult<List<Category>>>()
     val category: LiveData<CustomResult<List<Category>>> = _category

@@ -5,9 +5,7 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -22,7 +20,6 @@ import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.data.models.Source
 import com.fwhyn.noos.databinding.ActivityMainBinding
 import com.fwhyn.noos.databinding.ViewErrorBinding
-import com.fwhyn.noos.ui.adapters.NewsAdapter
 import com.fwhyn.noos.ui.helper.Constants.SOURCE
 import com.fwhyn.noos.ui.helper.CustomResult
 import com.fwhyn.noos.ui.helper.showToast
@@ -36,7 +33,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     private lateinit var errorView: ViewErrorBinding
 
     private lateinit var articlesView: RecyclerView
-    private lateinit var newsAdapter: NewsAdapter
+    private lateinit var articleAdapter: ArticleAdapter
     private val articles = ArrayList<Article>()
 
     private val viewModel: ArticlesViewModel by viewModels()
@@ -87,7 +84,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
 
     private fun initArticlesView() {
         articlesView = viewBinding.recyclerViewNews
-        newsAdapter = NewsAdapter(this@ArticlesActivity, articles) { article ->
+        articleAdapter = ArticleAdapter(this@ArticlesActivity, articles) { article ->
             onItemClick(article)
         }
 
@@ -96,7 +93,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
             itemAnimator = DefaultItemAnimator()
             isNestedScrollingEnabled = false
             addItemDecoration(DividerItemDecoration(this@ArticlesActivity, DividerItemDecoration.VERTICAL))
-            adapter = newsAdapter
+            adapter = articleAdapter
         }
     }
 
@@ -155,39 +152,44 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
     private fun showArticles(data: List<Article>) {
         articles.clear()
         articles.addAll(data)
-        newsAdapter.notifyDataSetChanged()
+        articleAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
+
         val searchManager = getSystemService(SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.action_search).actionView as SearchView?
-        val searchMenuItem = menu.findItem(R.id.action_search)
-        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.queryHint = "Search News"
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                if (query.length > 2) {
-                    viewModel.run {
-                        temporaryKeyword = query
-                        loadArticles(source, temporaryKeyword)
+        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+
+        searchView.run {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            queryHint = getString(R.string.search_news)
+
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    if (query.length > 2) {
+                        viewModel.run {
+                            temporaryKeyword = query
+                            loadArticles(source, temporaryKeyword)
+                        }
+
+                    } else {
+                        showToast("Please type more than two letters.")
                     }
 
-                } else {
-                    showToast("Please type more than two letters.")
+                    return false
                 }
 
-                return false
-            }
+                override fun onQueryTextChange(newText: String): Boolean {
+                    viewModel.temporaryKeyword = newText
 
-            override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.temporaryKeyword = newText
+                    return false
+                }
 
-                return false
-            }
-        })
-        searchMenuItem.icon!!.setVisible(false, false)
+            })
+        }
+
         return true
     }
 

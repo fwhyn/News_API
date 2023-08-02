@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fwhyn.noos.basecomponent.baseclass.BaseActivityBinding
 import com.fwhyn.noos.data.models.Category
 import com.fwhyn.noos.databinding.ActivityMainBinding
-import com.fwhyn.noos.ui.adapters.CategoryAdapter
 import com.fwhyn.noos.ui.helper.Constants.CATEGORY
 import com.fwhyn.noos.ui.helper.CustomResult
-import com.fwhyn.noos.ui.news.NewsDetailActivity
 import com.fwhyn.noos.ui.sources.SourcesActivity
 import dagger.hilt.android.AndroidEntryPoint
 

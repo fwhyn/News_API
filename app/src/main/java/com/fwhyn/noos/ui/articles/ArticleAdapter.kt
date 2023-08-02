@@ -1,4 +1,4 @@
-package com.fwhyn.noos.ui.adapters
+package com.fwhyn.noos.ui.articles
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -16,11 +16,11 @@ import com.fwhyn.noos.data.models.Article
 import com.fwhyn.noos.databinding.ItemNewsBinding
 
 
-class NewsAdapter(
+class ArticleAdapter(
     private val context: Context,
     private val dataSet: List<Article>,
     private val clickListener: (Article) -> Unit
-) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {

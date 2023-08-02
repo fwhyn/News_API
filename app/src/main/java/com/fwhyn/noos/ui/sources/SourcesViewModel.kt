@@ -8,13 +8,15 @@ import com.fwhyn.noos.data.helper.OnSuccessListener
 import com.fwhyn.noos.data.models.Category
 import com.fwhyn.noos.data.models.Source
 import com.fwhyn.noos.data.models.SourceRequestParameter
-import com.fwhyn.noos.data.repository.SourceDataRepository
+import com.fwhyn.noos.data.repository.BaseDataRepository
 import com.fwhyn.noos.ui.helper.CustomResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SourcesViewModel @Inject constructor(private val sourceDataRepository: SourceDataRepository) : ViewModel() {
+class SourcesViewModel @Inject constructor(
+    private val sourceDataRepository: BaseDataRepository<SourceRequestParameter, List<Source>>
+) : ViewModel() {
 
     var temporaryKeyword: String = ""
     var category: Category? = null
