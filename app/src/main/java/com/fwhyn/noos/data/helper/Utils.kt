@@ -30,7 +30,7 @@ object Utils {
         return try {
             val oldDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
             val parsedOldDate = oldDateFormat.parse(oldDate)
-            val newDateFormat = SimpleDateFormat("E, d MMM yyyy")
+            val newDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
             newDateFormat.format(parsedOldDate!!)
         } catch (e: Exception) {
