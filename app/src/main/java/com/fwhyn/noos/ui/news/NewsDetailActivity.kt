@@ -2,18 +2,12 @@ package com.fwhyn.noos.ui.news
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.fwhyn.noos.R
@@ -48,6 +42,22 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
         init()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        initNewsMenu(menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.view_web -> openByWeb()
+            R.id.share -> shareUrl()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    // ----------------------------------------------------------------
     private fun init() {
         initData()
         initView()
@@ -66,6 +76,7 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
         initAppbar()
         iniProgressBar()
         initWebView()
+        initErrorView()
     }
 
     private fun initAppbar() {
@@ -74,7 +85,6 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
         setSupportActionBar(toolbar.toolbar)
         supportActionBar?.title = ""
         supportActionBar?.subtitle = ""
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun iniProgressBar() {
@@ -94,16 +104,26 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
                     super.onReceivedError(view, request, error)
 
                     progressBar.showLayout(false)
+                    showError()
                 }
             }
 
-            webChromeClient= object : WebChromeClient() {
+            webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
 
+                    errorView.showLayout(false)
                     progressBar.showLayout(newProgress != 100)
                 }
             }
+        }
+    }
+
+    private fun showError() {
+        errorView.run {
+            showLayout(true)
+            this.setTitle(getString(R.string.cannot_load_news))
+            this.setMessage(getString(R.string.check_your_connection))
         }
     }
 
@@ -111,7 +131,6 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
         errorView = ErrorView(viewBinding.viewError)
         errorView.setButton({
             loadArticle(viewModel.article.value)
-
         })
     }
 
@@ -145,6 +164,10 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
         }
     }
 
+    private fun initNewsMenu(menu: Menu) {
+        menuInflater.inflate(R.menu.menu_news, menu)
+    }
+
     private fun openByWeb() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(viewModel.article.value?.url)
@@ -167,19 +190,5 @@ class NewsDetailActivity : BaseActivityBinding<ActivityNewsDetailBinding>() {
         } catch (e: Exception) {
             Toast.makeText(this, "Sorry, \nCannot be shared", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_news, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.view_web -> openByWeb()
-            R.id.share -> shareUrl()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 }

@@ -48,6 +48,17 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         init(savedInstanceState)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        initSearchViewMenu(menu)
+
+        return true
+    }
+
+    // ----------------------------------------------------------------
+    override fun onRefresh() {
+        resetArticles()
+    }
+
     // ----------------------------------------------------------------
     private fun init(savedInstanceState: Bundle?) {
         initObserver()
@@ -128,53 +139,7 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
         }
     }
 
-    private fun onFailure(value: CustomResult.Failure) {
-        swipeRefresh.isRefreshing = false
-        swipeRefresh.visibility = View.GONE
-
-        value.throwable.message?.let { setViewError(it) }
-    }
-
-    private fun setViewError(data: String) {
-        errorView.run {
-            layoutError.visibility = View.VISIBLE
-            tvErrorTitle.text = getString(R.string.no_result)
-            tvErrorMessage.text = data
-        }
-    }
-
-    private fun onLoading() {
-        swipeRefresh.isRefreshing = true
-        swipeRefresh.visibility = View.VISIBLE
-        errorView.layoutError.visibility = View.GONE
-        viewBinding.tvSourceTitle.text = getString(R.string.getting_news)
-    }
-
-    private fun onSuccess(data: CustomResult.Success<List<Article>>) {
-        swipeRefresh.isRefreshing = false
-        errorView.layoutError.visibility = View.GONE
-        swipeRefresh.visibility = View.VISIBLE
-        viewBinding.tvSourceTitle.text = viewModel.source?.name
-
-        notifyIfListEmpty(data.value)
-        showArticles(data.value)
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun showArticles(data: List<Article>) {
-        articles.clear()
-        articles.addAll(data)
-        articleAdapter.notifyDataSetChanged()
-    }
-
-    private fun resetArticles() {
-        viewModel.run {
-            temporaryKeyword = null
-            loadArticles(temporaryKeyword, source)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    private fun initSearchViewMenu(menu: Menu) {
         menuInflater.inflate(R.menu.menu_search, menu)
 
         val searchManager = getSystemService(SEARCH_SERVICE) as SearchManager
@@ -214,11 +179,51 @@ class ArticlesActivity : BaseActivityBinding<ActivityMainBinding>(), SwipeRefres
                 false
             }
         }
-
-        return true
     }
 
-    override fun onRefresh() {
-        resetArticles()
+    private fun resetArticles() {
+        viewModel.run {
+            temporaryKeyword = null
+            loadArticles(temporaryKeyword, source)
+        }
+    }
+
+    private fun onFailure(value: CustomResult.Failure) {
+        swipeRefresh.isRefreshing = false
+        swipeRefresh.visibility = View.GONE
+
+        value.throwable.message?.let { setViewError(it) }
+    }
+
+    private fun setViewError(data: String) {
+        errorView.run {
+            layoutError.visibility = View.VISIBLE
+            tvErrorTitle.text = getString(R.string.no_result)
+            tvErrorMessage.text = data
+        }
+    }
+
+    private fun onLoading() {
+        swipeRefresh.isRefreshing = true
+        swipeRefresh.visibility = View.VISIBLE
+        errorView.layoutError.visibility = View.GONE
+        viewBinding.tvSourceTitle.text = getString(R.string.getting_news)
+    }
+
+    private fun onSuccess(data: CustomResult.Success<List<Article>>) {
+        swipeRefresh.isRefreshing = false
+        errorView.layoutError.visibility = View.GONE
+        swipeRefresh.visibility = View.VISIBLE
+        viewBinding.tvSourceTitle.text = viewModel.source?.name
+
+        notifyIfListEmpty(data.value)
+        showArticles(data.value)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun showArticles(data: List<Article>) {
+        articles.clear()
+        articles.addAll(data)
+        articleAdapter.notifyDataSetChanged()
     }
 }

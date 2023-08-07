@@ -21,4 +21,6 @@
     <string name="search_news">Search News</string>
     <string name="getting_news">Getting News…</string>
     <string name="data_empty">Data Is Empty</string>
+    <string name="cannot_load_news">Cannot Load News</string>
+    <string name="check_your_connection">Please check your connection.</string>
 </resources>
