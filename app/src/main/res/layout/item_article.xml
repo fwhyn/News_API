@@ -106,9 +106,9 @@
 
             <TextView
                 android:id="@+id/tv_source"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginHorizontal="@dimen/margin_small"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-light"
                 android:maxLines="1"
@@ -117,12 +117,13 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/layout_date"
+                app:layout_constraintEnd_toStartOf="@+id/tv_time"
                 app:layout_constraintStart_toEndOf="@+id/view_thumbnail"
                 app:layout_constraintTop_toTopOf="@+id/layout_date" />
 
             <TextView
                 android:id="@+id/tv_time"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_small"
                 android:ellipsize="end"
@@ -131,7 +132,6 @@
                 android:text="@string/time"
                 app:layout_constraintBottom_toBottomOf="@+id/layout_date"
                 app:layout_constraintEnd_toStartOf="@+id/layout_date"
-                app:layout_constraintStart_toEndOf="@+id/tv_source"
                 app:layout_constraintTop_toTopOf="@+id/layout_date" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
